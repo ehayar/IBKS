@@ -1,0 +1,21 @@
+﻿@using System.Data
+@model DataSet
+@{
+    Layout = null;
+}
+<div class=" col-lg-12 col-md-12 col-12 text-center">
+    <h1 class="WelcomeTitle">Welcome To IBKS</h1>
+</div>
+
+
+<table cellpadding="0" cellspacing="0">
+    <tr>
+        <th>Branch Name</th>
+    </tr>
+    @foreach (DataRow row in Model.Tables[0].Rows)
+    {
+        <tr>
+            <td>@row["BranchName"]</td>
+        </tr>
+    }
+</table>

@@ -5,15 +5,15 @@ using Microsoft.Extensions.Configuration;
 using System.Data;
 
 
-namespace IBKSCompany.Controllers
+namespace IBKSCompany.Controllers.api
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ClientController : ControllerBase
+    public class Client : ControllerBase
     {
         //dependency injection to read connectionstring from app settings file
         private readonly IConfiguration _configuration;
-        public ClientController(IConfiguration configuration)
+        public Client(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -76,7 +76,7 @@ namespace IBKSCompany.Controllers
         }
 
         [HttpPost]
-        public JsonResult Post(Client client)
+        public JsonResult Post(DATA.Models.Client client)
         {
             string query = @"
                            insert into dbo.Client
@@ -104,7 +104,7 @@ namespace IBKSCompany.Controllers
         }
 
         [HttpPost("{id}")]
-        public JsonResult Update(Client client, int id)
+        public JsonResult Update(DATA.Models.Client client, int id)
         {
             string query = @"
                            update dbo.Client

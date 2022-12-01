@@ -8,7 +8,7 @@ namespace IBKSCompany.DATA.Models
     public class Client
     {
         public int ClientID { get; set; }
-        public String ClientName { get; set; }
+        public string ClientName { get; set; }
         public int BranchId { get; set; }
     //Was trying to add relation as foreign key
      //   public Branch branch { get; set; }

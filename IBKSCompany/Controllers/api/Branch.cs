@@ -1,19 +1,22 @@
 ﻿using IBKSCompany.DATA.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Web;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 
 
-namespace IBKSCompany.Controllers
+namespace IBKSCompany.Controllers.api
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EmployeeController : ControllerBase
+    public class Branch : ControllerBase
     {
+
         //dependency injection to read connectionstring from app settings file
         private readonly IConfiguration _configuration;
-        public EmployeeController(IConfiguration configuration)
+        public Branch(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -23,8 +26,8 @@ namespace IBKSCompany.Controllers
         public JsonResult Get()
         {
             string query = @"
-                            select EmployeeID as id, EmployeeName, EmployeeDOB, EmployeeSex, SuperId,BranchId from
-                            dbo.Employee
+                            select BranchID as id, BranchName from
+                            dbo.Branch
                             ";
 
             DataTable table = new DataTable();
@@ -51,8 +54,8 @@ namespace IBKSCompany.Controllers
         public JsonResult GetById(int id)
         {
             string query = @"
-                            select EmployeeID, EmployeeName, EmployeeDOB, EmployeeSex, SuperId,BranchId from
-                            dbo.Employee where EmployeeID=@EmployeeID
+                            select BranchID, BranchName from
+                            dbo.Branch where BranchID=@BranchID
                             ";
 
             DataTable table = new DataTable();
@@ -63,7 +66,7 @@ namespace IBKSCompany.Controllers
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
-                    myCommand.Parameters.AddWithValue("@EmployeeID", id);
+                    myCommand.Parameters.AddWithValue("@BranchID", id);
 
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
@@ -76,11 +79,11 @@ namespace IBKSCompany.Controllers
         }
 
         [HttpPost]
-        public JsonResult Post(Employee employee)
+        public JsonResult Post(DATA.Models.Branch Branch)
         {
             string query = @"
-                           insert into dbo.Employee
-                           values (@EmployeeName, @EmployeeDOB, @EmployeeSex, @SuperId, @BranchId)
+                           insert into dbo.Branch
+                           values (@BranchName)
                             ";
 
             DataTable table = new DataTable();
@@ -91,11 +94,7 @@ namespace IBKSCompany.Controllers
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
-                    myCommand.Parameters.AddWithValue("@EmployeeName", employee.EmployeeName);
-                    myCommand.Parameters.AddWithValue("@EmployeeDOB", employee.EmployeeDOB);
-                    myCommand.Parameters.AddWithValue("@EmployeeSex", employee.EmployeeSex);
-                    myCommand.Parameters.AddWithValue("@SuperId", employee.SuperId);
-                    myCommand.Parameters.AddWithValue("@BranchId", employee.BranchId);
+                    myCommand.Parameters.AddWithValue("@BranchName", Branch.BranchName);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
@@ -103,20 +102,16 @@ namespace IBKSCompany.Controllers
                 }
             }
 
-            return new JsonResult("New Employee Added");
+            return new JsonResult("New Branch Added");
         }
 
         [HttpPost("{id}")]
-        public JsonResult Update(Employee employee, int id)
+        public JsonResult Update(DATA.Models.Branch branch, int id)
         {
             string query = @"
-                           update dbo.Employee
-                           set EmployeeName= @EmployeeName,
-                               EmployeeDOB= @EmployeeDOB,
-                               EmployeeSex= @EmployeeSex,
-                               SuperId=@SuperId,
-                               BranchId=@BranchId
-                            where EmployeeID=@EmployeeID
+                           update dbo.Branch
+                           set BranchName= @BranchName
+                            where BranchID=@BranchID
                             ";
 
             DataTable table = new DataTable();
@@ -127,12 +122,8 @@ namespace IBKSCompany.Controllers
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
-                    myCommand.Parameters.AddWithValue("@EmployeeID", id);
-                    myCommand.Parameters.AddWithValue("@EmployeeName", employee.EmployeeName);
-                    myCommand.Parameters.AddWithValue("@EmployeeDOB", employee.EmployeeDOB);
-                    myCommand.Parameters.AddWithValue("@EmployeeSex", employee.EmployeeSex);
-                    myCommand.Parameters.AddWithValue("@SuperId", employee.SuperId);
-                    myCommand.Parameters.AddWithValue("@BranchId", employee.BranchId);
+                    myCommand.Parameters.AddWithValue("@BranchID", id);
+                    myCommand.Parameters.AddWithValue("@BranchName", branch.BranchName);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
@@ -140,15 +131,15 @@ namespace IBKSCompany.Controllers
                 }
             }
 
-            return new JsonResult("Employee Information Updated");
+            return new JsonResult("Branch Updated");
         }
 
         [HttpDelete("{id}")]
         public JsonResult Delete(int id)
         {
             string query = @"
-                           delete from dbo.Employee
-                            where EmployeeID=@EmployeeID
+                           delete from dbo.Branch
+                            where BranchID=@BranchID
                             ";
 
             DataTable table = new DataTable();
@@ -159,7 +150,7 @@ namespace IBKSCompany.Controllers
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
-                    myCommand.Parameters.AddWithValue("@EmployeeID", id);
+                    myCommand.Parameters.AddWithValue("@BranchID", id);
 
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
@@ -168,8 +159,9 @@ namespace IBKSCompany.Controllers
                 }
             }
 
-            return new JsonResult("Employee Deleted");
+            return new JsonResult("Branch Deleted");
         }
+
 
 
     }
